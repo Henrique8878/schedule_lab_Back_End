@@ -1,0 +1,45 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User{
+  id String @id @default(uuid())
+  created_at DateTime @default(now())
+  name String 
+  email String @unique
+  password_hash String
+  category String
+  manyLaboratory Laboratory[]
+  @@map("users")
+}
+
+model Laboratory{
+  id String @id @default(uuid())
+  name String
+  capacity Int
+  localization String
+  description String
+  quantityReservations Int @default(0)
+  userId String
+  user User @relation(fields: [userId],references: [id], onDelete: Cascade)
+  reservations Availability[]
+  @@map("laboratories")
+}
+
+model Availability{
+  id String @id @default(uuid())
+  created_at DateTime @default(now())
+  date DateTime
+  beginHour DateTime
+  endHour DateTime
+  laboratoryId String
+  laboratory Laboratory @relation(fields: [laboratoryId], references: [id], onDelete: Cascade)
+}
