@@ -27,7 +27,6 @@ model Laboratory{
   capacity Int
   localization String
   description String
-  quantityReservations Int @default(0)
   userId String
   user User @relation(fields: [userId],references: [id], onDelete: Cascade)
   reservations Availability[]

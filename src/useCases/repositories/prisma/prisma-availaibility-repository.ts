@@ -9,18 +9,6 @@ export class PrismaAvailaibilityRepository implements AvailaibilityRepository {
       data,
     })
 
-    const countLaboratoryReservations = await prisma.laboratory.count({
-      where: {
-        id: availaibility.laboratoryId,
-      },
-    })
-
-    await prisma.laboratory.update({
-      where: {
-        id: availaibility.laboratoryId,
-      },
-      data: { quantityReservations: countLaboratoryReservations },
-    })
     return availaibility
   }
 

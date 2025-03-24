@@ -19,7 +19,6 @@ export class InMemoryLaboratoriesRepository implements LaboratoriesRepository {
       capacity,
       localization,
       userId,
-      quantityReservations: 0,
     }
 
     this.laboratories.push(laboratory)
