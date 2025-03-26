@@ -10,5 +10,7 @@ export interface UsersRepository {
     email: string,
     category: string,
   ): Promise<User | null>
-  findManyUsers(): Promise<User[] | []>
+  findManyUsers(
+    page: number,
+  ): Promise<{ users: User[] | []; totalCount: number }>
 }

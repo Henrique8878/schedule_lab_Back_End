@@ -62,8 +62,15 @@ export class InMemoryUsersRepository implements UsersRepository {
     return null
   }
 
-  async findManyUsers() {
-    const users = this.users
-    return users
+  async findManyUsers(page: number) {
+    const users = []
+    for (let i = (page - 1) * 10; i < page * 10; i++) {
+      users.push(this.users[i])
+    }
+    const totalCount = this.users.length
+    return {
+      users,
+      totalCount,
+    }
   }
 }

@@ -60,13 +60,23 @@ export class PrismaUsersRepository implements UsersRepository {
     return user
   }
 
-  async findManyUsers() {
+  async findManyUsers(page: number) {
     const users = await prisma.user.findMany({
+      take: 10,
+      skip: (page - 1) * 10,
+      orderBy: {
+        created_at: 'asc',
+      },
       include: {
         manyLaboratory: true,
       },
     })
 
-    return users
+    const totalCount = await prisma.user.count()
+
+    return {
+      users,
+      totalCount,
+    }
   }
 }
