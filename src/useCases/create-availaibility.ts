@@ -25,14 +25,14 @@ export class CreateAvailaibilityUseCase {
     endHour,
     laboratoryId,
   }: CreateAvailaibilityParams): Promise<CreateAvailaibilityReturn> {
-    const availaibility = await this.availaibilityRepository.findByDate(
-      beginHour,
-      laboratoryId,
-    )
+    // const availaibility = await this.availaibilityRepository.findByDate(
+    //   beginHour,
+    //   laboratoryId,
+    // )
 
-    if (availaibility) {
-      throw new AvailabilityAlreadyExists()
-    }
+    // if (availaibility) {
+    //   throw new AvailabilityAlreadyExists()
+    // }
 
     const newAvailaibility = await this.availaibilityRepository.create({
       id,

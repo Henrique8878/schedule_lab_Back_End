@@ -39,6 +39,7 @@ model Availability{
   date DateTime
   beginHour DateTime
   endHour DateTime
+  status String @default("pending")
   laboratoryId String
   laboratory Laboratory @relation(fields: [laboratoryId], references: [id], onDelete: Cascade)
 }

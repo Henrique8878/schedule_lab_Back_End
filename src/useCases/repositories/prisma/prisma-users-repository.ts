@@ -59,4 +59,14 @@ export class PrismaUsersRepository implements UsersRepository {
 
     return user
   }
+
+  async findManyUsers() {
+    const users = await prisma.user.findMany({
+      include: {
+        manyLaboratory: true,
+      },
+    })
+
+    return users
+  }
 }

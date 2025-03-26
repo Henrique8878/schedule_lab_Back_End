@@ -10,4 +10,5 @@ export interface UsersRepository {
     email: string,
     category: string,
   ): Promise<User | null>
+  findManyUsers(): Promise<User[] | []>
 }

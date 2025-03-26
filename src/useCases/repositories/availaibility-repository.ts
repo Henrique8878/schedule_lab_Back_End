@@ -9,4 +9,6 @@ export interface AvailaibilityRepository {
     beginHour: Date,
     laboratoryId: string,
   ): Promise<Availability | null>
+
+  findManyAvailability(): Promise<Availability[] | []>
 }

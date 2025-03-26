@@ -38,4 +38,13 @@ export class PrismaAvailaibilityRepository implements AvailaibilityRepository {
 
     return availability
   }
+
+  async findManyAvailability() {
+    const manyAvailabilities = await prisma.availability.findMany({
+      include: {
+        laboratory: true,
+      },
+    })
+    return manyAvailabilities
+  }
 }

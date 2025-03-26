@@ -43,4 +43,10 @@ export class InMemoryAvailaibilityRepository
 
     return availaibility
   }
+
+  async findManyAvailability() {
+    const manyAvailabilities = this.availaibilities
+
+    return manyAvailabilities
+  }
 }

@@ -61,4 +61,9 @@ export class InMemoryUsersRepository implements UsersRepository {
     }
     return null
   }
+
+  async findManyUsers() {
+    const users = this.users
+    return users
+  }
 }
