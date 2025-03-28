@@ -7,13 +7,13 @@ export async function GetManyUsers(
   reply: FastifyReply,
 ) {
   const findManyUsersSchema = z.object({
-    page: z.number().default(1),
+    page: z.string().default('1'),
   })
 
   const { page } = findManyUsersSchema.parse(request.query)
   try {
     const getUsers = MakeGetManyUsers()
-    const { users, totalCount } = await getUsers.execute({ page })
+    const { users, totalCount } = await getUsers.execute({ page: Number(page) })
     reply.status(200).send({
       users,
       totalCount,
