@@ -1,6 +1,6 @@
+import { prisma } from '@/lib/prisma'
 import { Prisma } from '@prisma/client'
 import { UsersRepository } from '../users-repository'
-import { prisma } from '@/lib/prisma'
 
 export class PrismaUsersRepository implements UsersRepository {
   async create(data: Prisma.UserUncheckedCreateInput) {
@@ -78,5 +78,25 @@ export class PrismaUsersRepository implements UsersRepository {
       users,
       totalCount,
     }
+  }
+
+  async deleteUser(id: string) {
+    const user = await prisma.user.findUnique({
+      where: {
+        id,
+      },
+    })
+
+    if (!user) {
+      return null
+    }
+
+    await prisma.user.delete({
+      where: {
+        id,
+      },
+    })
+
+    return user
   }
 }

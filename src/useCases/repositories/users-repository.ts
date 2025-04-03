@@ -13,4 +13,6 @@ export interface UsersRepository {
   findManyUsers(
     page: number,
   ): Promise<{ users: User[] | []; totalCount: number }>
+
+  deleteUser(id: string): Promise<User | null>
 }

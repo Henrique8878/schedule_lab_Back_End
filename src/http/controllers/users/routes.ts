@@ -1,9 +1,10 @@
 import { FastifyInstance } from 'fastify'
-import { register } from './register'
 import { authenticate } from './authenticate'
-import { getProfile } from './get-profile'
-import { UpdateUserProfile } from './update-user-profile'
+import { DeleteUser } from './delete-user'
 import { GetManyUsers } from './get-many'
+import { getProfile } from './get-profile'
+import { register } from './register'
+import { UpdateUserProfile } from './update-user-profile'
 
 export async function UsersRoutes(app: FastifyInstance) {
   app.post('/register', register)
@@ -11,4 +12,5 @@ export async function UsersRoutes(app: FastifyInstance) {
   app.patch('/user-profile/:id', UpdateUserProfile)
   app.get('/user-profile/:id', getProfile)
   app.get('/many-users', GetManyUsers)
+  app.delete('/user/:id', DeleteUser)
 }

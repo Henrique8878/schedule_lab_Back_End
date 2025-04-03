@@ -17,13 +17,14 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
 
   try {
     const createLaboratoryUseCase = MakeCreateLaboratoryUseCase()
-    await createLaboratoryUseCase.execute({
+    const { newLaboratory } = await createLaboratoryUseCase.execute({
       userId,
       name,
       localization,
       capacity,
       description,
     })
+    reply.status(201).send(newLaboratory)
   } catch (e) {
     if (e instanceof LaboratoryAlreadyExists) {
       reply.status(409).send({
@@ -31,6 +32,4 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
       })
     }
   }
-
-  reply.status(201).send()
 }
