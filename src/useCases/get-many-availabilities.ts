@@ -1,12 +1,16 @@
 import { AvailaibilityRepository } from './repositories/availaibility-repository'
 
+interface GetManyAvailabilitiesUseCaseProps {
+  page: number
+}
+
 export class GetManyAvailabilitiesUseCase {
   constructor(private availabilityRepository: AvailaibilityRepository) {}
 
-  async execute() {
-    const manyAvailabilities =
-      this.availabilityRepository.findManyAvailability()
+  async execute({ page }: GetManyAvailabilitiesUseCaseProps) {
+    const { availability, availabilityInMonth, totalCount } =
+      await this.availabilityRepository.findManyAvailability(page)
 
-    return manyAvailabilities
+    return { availability, availabilityInMonth, totalCount }
   }
 }

@@ -1,12 +1,51 @@
-import { Prisma } from '@prisma/client'
-import { AvailaibilityRepository } from '../availaibility-repository'
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@prisma/client'
 import dayjs from 'dayjs'
+import { AvailaibilityRepository } from '../availaibility-repository'
 
 export class PrismaAvailaibilityRepository implements AvailaibilityRepository {
   async create(data: Prisma.AvailabilityUncheckedCreateInput) {
+    const sameBeginHour = await prisma.availability.findFirst({
+      where: {
+        beginHour: {
+          equals: data.beginHour,
+        },
+        laboratoryId: data.laboratoryId,
+      },
+    })
+
+    const sameEndHour = await prisma.availability.findFirst({
+      where: {
+        endHour: {
+          equals: data.endHour,
+        },
+        laboratoryId: data.laboratoryId,
+      },
+    })
+
+    const sameBeginEndHour = await prisma.availability.findFirst({
+      where: {
+        beginHour: {
+          equals: data.beginHour,
+        },
+        endHour: data.endHour,
+        laboratoryId: data.laboratoryId,
+      },
+    })
+
+    if (sameBeginEndHour) {
+      throw new Error('Não é possível agendar horários iguais de início e fim')
+    }
+
+    if (sameBeginHour || sameEndHour) {
+      return null
+    }
+
     const availaibility = await prisma.availability.create({
       data,
+      include: {
+        laboratory: true,
+      },
     })
 
     return availaibility
@@ -39,12 +78,58 @@ export class PrismaAvailaibilityRepository implements AvailaibilityRepository {
     return availability
   }
 
-  async findManyAvailability() {
+  async findManyAvailability(page: number) {
     const manyAvailabilities = await prisma.availability.findMany({
+      take: 10,
+      skip: (page - 1) * 10,
+      include: {
+        laboratory: true,
+      },
+      orderBy: {
+        created_at: 'desc',
+      },
+    })
+
+    const totalCount = await prisma.availability.count()
+
+    const availabilityInMonth = await prisma.availability.count({
+      where: {
+        created_at: {
+          gte: dayjs().startOf('month').toDate(),
+          lte: dayjs().endOf('month').toDate(),
+        },
+      },
+    })
+    return {
+      availability: manyAvailabilities,
+      availabilityInMonth,
+      totalCount,
+    }
+  }
+
+  async deleteAvailability(id: string) {
+    const availability = await prisma.availability.delete({
+      where: {
+        id,
+      },
+    })
+
+    return availability
+  }
+
+  async updateAvailability(id: string, status: string) {
+    const availability = await prisma.availability.update({
+      where: {
+        id,
+      },
+      data: {
+        status,
+      },
       include: {
         laboratory: true,
       },
     })
-    return manyAvailabilities
+
+    return availability
   }
 }

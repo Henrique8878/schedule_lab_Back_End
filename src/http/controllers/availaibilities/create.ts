@@ -11,7 +11,7 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
   })
 
   const laboratoryIdSchema = z.object({
-    laboratoryId: z.string().uuid(),
+    laboratoryId: z.string(),
   })
 
   const { date, beginHour, endHour } = createAvailaibilitySchema.parse(
@@ -21,20 +21,21 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
 
   try {
     const createAvailaibilitiesUseCase = MakeCreateAvailaibility()
-    await createAvailaibilitiesUseCase.execute({
+    const { newAvailaibility } = await createAvailaibilitiesUseCase.execute({
       date: new Date(date),
       beginHour: new Date(beginHour),
       endHour: new Date(endHour),
       laboratoryId,
     })
+    reply.status(201).send(newAvailaibility)
   } catch (e) {
     if (e instanceof AvailabilityAlreadyExists) {
       reply.status(409).send({
         message: e.message,
       })
     }
-    throw e
+    reply.status(409).send({
+      message: e,
+    })
   }
-
-  reply.status(201).send()
 }

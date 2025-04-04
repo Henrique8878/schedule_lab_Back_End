@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { Prisma } from '@prisma/client'
+import dayjs from 'dayjs'
 import { UsersRepository } from '../users-repository'
 
 export class PrismaUsersRepository implements UsersRepository {
@@ -72,7 +73,14 @@ export class PrismaUsersRepository implements UsersRepository {
       },
     })
 
-    const totalCount = await prisma.user.count()
+    const totalCount = await prisma.user.count({
+      where: {
+        created_at: {
+          gte: dayjs().startOf('month').toDate(),
+          lte: dayjs().endOf('month').toDate(),
+        },
+      },
+    })
 
     return {
       users,

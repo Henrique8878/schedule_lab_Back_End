@@ -1,5 +1,5 @@
 export class AvailabilityAlreadyExists extends Error {
   constructor() {
-    super('Availaibility already exists')
+    super('Horário de reserva não disponível')
   }
 }

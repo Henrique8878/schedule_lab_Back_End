@@ -10,5 +10,13 @@ export interface AvailaibilityRepository {
     laboratoryId: string,
   ): Promise<Availability | null>
 
-  findManyAvailability(): Promise<Availability[] | []>
+  findManyAvailability(page: number): Promise<{
+    availability: Availability[]
+    availabilityInMonth: number
+    totalCount: number
+  }>
+
+  deleteAvailability(id: string): Promise<Availability>
+
+  updateAvailability(id: string, status: string): Promise<Availability>
 }
