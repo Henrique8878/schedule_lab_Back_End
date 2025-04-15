@@ -29,7 +29,7 @@ export class PrismaLaboratoriesRepository implements LaboratoriesRepository {
         reservations: true,
       },
       orderBy: {
-        name: 'desc',
+        created_at: 'desc',
       },
     })
 

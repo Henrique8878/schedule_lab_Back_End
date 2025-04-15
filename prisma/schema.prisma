@@ -18,12 +18,14 @@ model User{
   password_hash String
   category String
   manyLaboratory Laboratory[]
+  manyAvailability Availability[]
   @@map("users")
 }
 
 model Laboratory{
   id String @id @default(uuid())
   name String
+  created_at DateTime @default(now())
   capacity Int
   localization String
   description String
@@ -41,5 +43,7 @@ model Availability{
   endHour DateTime
   status String @default("pending")
   laboratoryId String
+  userId String
+  user User @relation(fields: [userId],references: [id], onDelete: Cascade)
   laboratory Laboratory @relation(fields: [laboratoryId], references: [id], onDelete: Cascade)
 }

@@ -32,6 +32,7 @@ export class PrismaUsersRepository implements UsersRepository {
       },
       include: {
         manyLaboratory: true,
+        manyAvailability: true,
       },
     })
 

@@ -1,10 +1,23 @@
 import { prisma } from '@/lib/prisma'
+import { AvailabilityMax10 } from '@/useCases/errors/availability-max-10'
 import { Prisma } from '@prisma/client'
 import dayjs from 'dayjs'
 import { AvailaibilityRepository } from '../availaibility-repository'
 
 export class PrismaAvailaibilityRepository implements AvailaibilityRepository {
   async create(data: Prisma.AvailabilityUncheckedCreateInput) {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: data.userId,
+      },
+    })
+
+    if (user?.category === 'user') {
+      const availability = await prisma.availability.count()
+      if (availability >= 10) {
+        throw new AvailabilityMax10()
+      }
+    }
     const sameBeginHour = await prisma.availability.findFirst({
       where: {
         beginHour: {

@@ -8,6 +8,6 @@ app
   .then(() => {
     console.log('HTTP Server Running')
   })
-  .catch(() => {
-    console.log('Server Error')
+  .catch((e) => {
+    console.log(`Server Error ${e}`)
   })
