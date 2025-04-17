@@ -12,6 +12,24 @@ export class PrismaUsersRepository implements UsersRepository {
     return user
   }
 
+  async verifyValidation(email: string) {
+    const user = await prisma.user.findUnique({
+      where: {
+        email,
+        isVerified: false,
+        expires_at: {
+          lt: new Date(),
+        },
+      },
+    })
+
+    if (user) {
+      return false
+    }
+
+    return true
+  }
+
   async findByEmail(email: string) {
     const user = await prisma.user.findUnique({
       where: {
@@ -63,6 +81,14 @@ export class PrismaUsersRepository implements UsersRepository {
   }
 
   async findManyUsers(page: number) {
+    await prisma.user.deleteMany({
+      where: {
+        expires_at: {
+          lt: new Date(),
+        },
+        isVerified: false,
+      },
+    })
     const users = await prisma.user.findMany({
       take: 10,
       skip: (page - 1) * 10,
@@ -80,6 +106,7 @@ export class PrismaUsersRepository implements UsersRepository {
           gte: dayjs().startOf('month').toDate(),
           lte: dayjs().endOf('month').toDate(),
         },
+        isVerified: true,
       },
     })
 

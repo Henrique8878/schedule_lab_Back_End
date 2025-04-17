@@ -23,6 +23,9 @@ export class PrismaAvailaibilityRepository implements AvailaibilityRepository {
         beginHour: {
           equals: data.beginHour,
         },
+        status: {
+          in: ['approved', 'pending'],
+        },
         laboratoryId: data.laboratoryId,
       },
     })
@@ -31,6 +34,9 @@ export class PrismaAvailaibilityRepository implements AvailaibilityRepository {
       where: {
         endHour: {
           equals: data.endHour,
+        },
+        status: {
+          in: ['approved', 'pending'],
         },
         laboratoryId: data.laboratoryId,
       },
@@ -41,13 +47,18 @@ export class PrismaAvailaibilityRepository implements AvailaibilityRepository {
         beginHour: {
           equals: data.beginHour,
         },
+        status: {
+          in: ['approved', 'pending'],
+        },
         endHour: data.endHour,
         laboratoryId: data.laboratoryId,
       },
     })
 
     if (sameBeginEndHour) {
-      throw new Error('Não é possível agendar horários iguais de início e fim')
+      throw new Error(
+        'Já existe um agendamento pendente ou aprovado nesse horário',
+      )
     }
 
     if (sameBeginHour || sameEndHour) {
@@ -92,6 +103,15 @@ export class PrismaAvailaibilityRepository implements AvailaibilityRepository {
   }
 
   async findManyAvailability(page: number) {
+    await prisma.user.deleteMany({
+      where: {
+        expires_at: {
+          lt: new Date(),
+        },
+        isVerified: false,
+      },
+    })
+
     const manyAvailabilities = await prisma.availability.findMany({
       take: 10,
       skip: (page - 1) * 10,

@@ -22,6 +22,15 @@ export class PrismaLaboratoriesRepository implements LaboratoriesRepository {
   }
 
   async findManyLaboratories(page: number) {
+    await prisma.user.deleteMany({
+      where: {
+        expires_at: {
+          lt: new Date(),
+        },
+        isVerified: false,
+      },
+    })
+
     const laboratories = await prisma.laboratory.findMany({
       take: 10,
       skip: (page - 1) * 10,

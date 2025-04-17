@@ -43,8 +43,10 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
       })
     }
 
-    reply.status(409).send({
-      message: e,
-    })
+    if (e instanceof Error) {
+      reply.status(409).send({
+        message: e.message,
+      })
+    }
   }
 }

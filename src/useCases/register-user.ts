@@ -1,7 +1,8 @@
-import { hash } from 'bcryptjs'
-import { UsersRepository } from './repositories/users-repository'
-import { UserAlreadyExists } from './errors/user-already-exists'
 import { User } from '@prisma/client'
+import { hash } from 'bcryptjs'
+import dayjs from 'dayjs'
+import { UserAlreadyExists } from './errors/user-already-exists'
+import { UsersRepository } from './repositories/users-repository'
 
 interface registerParams {
   name: string
@@ -21,7 +22,7 @@ export class RegisterUseCase {
     email,
     password_hash,
     category,
-  }: registerParams): Promise<registerReturn> {
+  }: registerParams): Promise<registerReturn | null> {
     const user = await this.usersRepository.findByEmail(email)
 
     if (user) {
@@ -34,10 +35,15 @@ export class RegisterUseCase {
       email,
       password_hash: Hash,
       category,
+      expires_at: dayjs().add(15, 'minutes').toDate(),
     })
 
-    return {
-      newUser,
+    if (newUser) {
+      return {
+        newUser,
+      }
     }
+
+    return null
   }
 }

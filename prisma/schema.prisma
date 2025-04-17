@@ -17,6 +17,8 @@ model User{
   email String @unique
   password_hash String
   category String
+  isVerified Boolean @default(false)
+  expires_at DateTime
   manyLaboratory Laboratory[]
   manyAvailability Availability[]
   @@map("users")
@@ -46,4 +48,11 @@ model Availability{
   userId String
   user User @relation(fields: [userId],references: [id], onDelete: Cascade)
   laboratory Laboratory @relation(fields: [laboratoryId], references: [id], onDelete: Cascade)
+}
+
+model emailVerification{
+  id String @id @default(uuid())
+  userEmail String @unique
+  token String
+  expires_at DateTime
 }

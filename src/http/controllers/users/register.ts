@@ -1,4 +1,5 @@
 import { UserAlreadyExists } from '@/useCases/errors/user-already-exists'
+import { VerificationLinkExpires } from '@/useCases/errors/verification-link-expired'
 import { MakeRegisterUseCase } from '@/useCases/factories/make-register-use-case'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import * as z from 'zod'
@@ -31,6 +32,16 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
       })
     }
 
-    throw e
+    if (e instanceof VerificationLinkExpires) {
+      reply.status(400).send({
+        message: e.message,
+      })
+    }
+
+    if (e instanceof Error) {
+      reply.status(400).send({
+        message: e.message,
+      })
+    }
   }
 }
