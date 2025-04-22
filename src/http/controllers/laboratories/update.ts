@@ -9,6 +9,8 @@ export async function UpdateLab(request: FastifyRequest, reply: FastifyReply) {
     capacity: z.coerce.number(),
     localization: z.string(),
     description: z.string(),
+    startOfBlockade: z.number().optional(),
+    endOfBlockade: z.number().optional(),
   })
 
   const updateLabParams = z.object({
@@ -16,9 +18,14 @@ export async function UpdateLab(request: FastifyRequest, reply: FastifyReply) {
   })
 
   const { labId } = updateLabParams.parse(request.params)
-  const { name, localization, capacity, description } = updateLabBody.parse(
-    request.body,
-  )
+  const {
+    name,
+    localization,
+    capacity,
+    description,
+    startOfBlockade,
+    endOfBlockade,
+  } = updateLabBody.parse(request.body)
 
   try {
     const updateLab = MakeUpdateLab()
@@ -28,6 +35,8 @@ export async function UpdateLab(request: FastifyRequest, reply: FastifyReply) {
       localization,
       capacity,
       description,
+      startOfBlockade,
+      endOfBlockade,
     })
     reply.status(200).send(laboratory)
   } catch (e) {

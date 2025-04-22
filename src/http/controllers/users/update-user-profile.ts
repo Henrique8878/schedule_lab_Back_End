@@ -9,7 +9,6 @@ export async function UpdateUserProfile(
 ) {
   const updateUserSchema = z.object({
     name: z.string(),
-    email: z.string().email(),
     category: z.enum(['admin', 'user']),
   })
 
@@ -17,11 +16,11 @@ export async function UpdateUserProfile(
     id: z.string(),
   })
 
-  const { name, email, category } = updateUserSchema.parse(request.body)
+  const { name, category } = updateUserSchema.parse(request.body)
   const { id } = updateUserSchemaParams.parse(request.params)
   try {
     const updateUser = MakeUpdateUserProfile()
-    const user = await updateUser.execute({ id, name, email, category })
+    const user = await updateUser.execute({ id, name, category })
     reply.status(200).send(user)
   } catch (e) {
     if (e instanceof UserUpdateNotExists) {

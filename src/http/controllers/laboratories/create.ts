@@ -10,10 +10,19 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
     localization: z.string().min(2),
     capacity: z.number(),
     description: z.string(),
+    startOfBlockade: z.number(),
+    endOfBlockade: z.number(),
   })
 
-  const { userId, name, localization, capacity, description } =
-    createLaboratorySchema.parse(request.body)
+  const {
+    userId,
+    name,
+    localization,
+    capacity,
+    description,
+    startOfBlockade,
+    endOfBlockade,
+  } = createLaboratorySchema.parse(request.body)
 
   try {
     const createLaboratoryUseCase = MakeCreateLaboratoryUseCase()
@@ -23,6 +32,8 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
       localization,
       capacity,
       description,
+      startOfBlockade,
+      endOfBlockade,
     })
     reply.status(201).send(newLaboratory)
   } catch (e) {

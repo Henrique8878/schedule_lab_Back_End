@@ -7,6 +7,8 @@ interface UpdateLabParams {
   capacity: number
   localization: string
   description: string
+  startOfBlockade: number | undefined
+  endOfBlockade: number | undefined
 }
 
 export class UpdateLabUseCase {
@@ -18,6 +20,8 @@ export class UpdateLabUseCase {
     localization,
     capacity,
     description,
+    startOfBlockade,
+    endOfBlockade,
   }: UpdateLabParams) {
     const lab = this.labRepository.findLabById(labId)
 
@@ -30,6 +34,8 @@ export class UpdateLabUseCase {
       capacity,
       localization,
       description,
+      startOfBlockade,
+      endOfBlockade,
     })
 
     return laboratory

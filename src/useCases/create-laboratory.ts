@@ -8,6 +8,8 @@ interface createLaboratoriesParams {
   localization: string
   capacity: number
   description: string
+  startOfBlockade: number
+  endOfBlockade: number
 }
 
 interface createLaboratoriesReturn {
@@ -23,6 +25,8 @@ export class CreateLaboratoryUseCase {
     localization,
     description,
     capacity,
+    startOfBlockade,
+    endOfBlockade,
   }: createLaboratoriesParams): Promise<createLaboratoriesReturn> {
     const laboratory = await this.laboratoriesRepository.findByName(name)
 
@@ -36,6 +40,8 @@ export class CreateLaboratoryUseCase {
       localization,
       description,
       capacity,
+      startOfBlockade,
+      endOfBlockade,
     })
 
     return {

@@ -31,6 +31,8 @@ model Laboratory{
   capacity Int
   localization String
   description String
+  startOfBlockade Int
+  endOfBlockade Int
   userId String
   user User @relation(fields: [userId],references: [id], onDelete: Cascade)
   reservations Availability[]
