@@ -12,6 +12,7 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
     description: z.string(),
     startOfBlockade: z.number(),
     endOfBlockade: z.number(),
+    operatingDays: z.string(),
   })
 
   const {
@@ -22,6 +23,7 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
     description,
     startOfBlockade,
     endOfBlockade,
+    operatingDays,
   } = createLaboratorySchema.parse(request.body)
 
   try {
@@ -34,6 +36,7 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
       description,
       startOfBlockade,
       endOfBlockade,
+      operatingDays,
     })
     reply.status(201).send(newLaboratory)
   } catch (e) {

@@ -33,6 +33,7 @@ model Laboratory{
   description String
   startOfBlockade Int
   endOfBlockade Int
+  operatingDays String
   userId String
   user User @relation(fields: [userId],references: [id], onDelete: Cascade)
   reservations Availability[]
@@ -45,7 +46,7 @@ model Availability{
   date DateTime
   beginHour DateTime
   endHour DateTime
-  status String @default("pending")
+  status String @default("approved")
   laboratoryId String
   userId String
   user User @relation(fields: [userId],references: [id], onDelete: Cascade)

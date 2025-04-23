@@ -18,53 +18,23 @@ export class PrismaAvailaibilityRepository implements AvailaibilityRepository {
         throw new AvailabilityMax10()
       }
     }
-    const sameBeginHour = await prisma.availability.findFirst({
+
+    const availabilityBetweenHours = await prisma.availability.findMany({
       where: {
         beginHour: {
-          equals: data.beginHour,
+          gt: data.beginHour,
         },
-        status: {
-          in: ['approved', 'pending'],
-        },
-        laboratoryId: data.laboratoryId,
-      },
-    })
-
-    const sameEndHour = await prisma.availability.findFirst({
-      where: {
         endHour: {
-          equals: data.endHour,
+          lt: data.endHour,
         },
-        status: {
-          in: ['approved', 'pending'],
-        },
-        laboratoryId: data.laboratoryId,
       },
     })
 
-    const sameBeginEndHour = await prisma.availability.findFirst({
-      where: {
-        beginHour: {
-          equals: data.beginHour,
-        },
-        status: {
-          in: ['approved', 'pending'],
-        },
-        endHour: data.endHour,
-        laboratoryId: data.laboratoryId,
-      },
-    })
-
-    if (sameBeginEndHour) {
+    if (availabilityBetweenHours) {
       throw new Error(
-        'Já existe um agendamento pendente ou aprovado nesse horário',
+        'Na data escolhida, já existem horários agendados entre os que você selecionou.',
       )
     }
-
-    if (sameBeginHour || sameEndHour) {
-      return null
-    }
-
     const availaibility = await prisma.availability.create({
       data,
       include: {

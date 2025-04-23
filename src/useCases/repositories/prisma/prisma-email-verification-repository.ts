@@ -28,7 +28,10 @@ export class PrismaEmailVerificationRepository
 
       const mailSend = new MailerSend({ apiKey: env.MAIL_SEND_API_KEY })
 
-      const sendFrom = new Sender('no-reply@test-xkjn41mm2vq4z781.mlsender.net')
+      const sendFrom = new Sender(
+        'no-reply@test-xkjn41mm2vq4z781.mlsender.net',
+        'Equipe Teste',
+      )
 
       const recipients = [new Recipient(email, 'Novo Usuário')]
 
@@ -38,11 +41,23 @@ export class PrismaEmailVerificationRepository
         .setSubject('Verificação de E-mail')
         .setHtml(
           `
-          <html>
-            <body>
+          <!DOCTYPE html>
+          <html lang="pt-BR">
+            <head>
+              <meta charset="UTF-8" />
+              <title>Verificação de E-mail</title>
+            </head>
+            <body style="font-family: sans-serif; line-height: 1.4;">
               <p>Olá!</p>
               <p>Clique no link abaixo para validar seu e-mail:</p>
-              <p><a href="${env.APP_URL}/verify-email?token=${emailVerification.token}&email=${newUser.email}" target="_blank">Validar E-mail</a></p>
+              <p>
+                <a href="${env.APP_URL}/verify-email?token=${emailVerification.token}&email=${newUser.email}" target="_blank">
+                  Validar E-mail
+                </a>
+              </p>
+              <p>Se você não solicitou isso, pode ignorar este e-mail.</p>
+              <hr />
+              <p style="font-size: 12px; color: #888;">Enviado por Equipe Teste - ${env.APP_URL}</p>
             </body>
           </html>
         `,

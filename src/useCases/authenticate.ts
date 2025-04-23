@@ -26,6 +26,9 @@ export class AuthenticateUseCase {
       throw new Error('O link de validação expirou')
     }
 
+    if (hasUser.isVerified === false) {
+      throw new Error('Este e-mail não foi verificado para realizar o login')
+    }
     await prisma.user.update({
       where: {
         email: hasUser.email,
