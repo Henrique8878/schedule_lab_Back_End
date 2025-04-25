@@ -9,6 +9,7 @@ interface UpdateLabParams {
   description: string
   startOfBlockade: number | undefined
   endOfBlockade: number | undefined
+  operatingDays: string | undefined
 }
 
 export class UpdateLabUseCase {
@@ -22,6 +23,7 @@ export class UpdateLabUseCase {
     description,
     startOfBlockade,
     endOfBlockade,
+    operatingDays,
   }: UpdateLabParams) {
     const lab = this.labRepository.findLabById(labId)
 
@@ -36,6 +38,7 @@ export class UpdateLabUseCase {
       description,
       startOfBlockade,
       endOfBlockade,
+      operatingDays,
     })
 
     return laboratory

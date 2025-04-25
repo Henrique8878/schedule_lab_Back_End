@@ -11,6 +11,7 @@ export async function UpdateLab(request: FastifyRequest, reply: FastifyReply) {
     description: z.string(),
     startOfBlockade: z.number().optional(),
     endOfBlockade: z.number().optional(),
+    operatingDays: z.string().optional(),
   })
 
   const updateLabParams = z.object({
@@ -25,6 +26,7 @@ export async function UpdateLab(request: FastifyRequest, reply: FastifyReply) {
     description,
     startOfBlockade,
     endOfBlockade,
+    operatingDays,
   } = updateLabBody.parse(request.body)
 
   try {
@@ -37,6 +39,7 @@ export async function UpdateLab(request: FastifyRequest, reply: FastifyReply) {
       description,
       startOfBlockade,
       endOfBlockade,
+      operatingDays,
     })
     reply.status(200).send(laboratory)
   } catch (e) {

@@ -19,7 +19,7 @@ export class PrismaAvailaibilityRepository implements AvailaibilityRepository {
       }
     }
 
-    const availabilityBetweenHours = await prisma.availability.findMany({
+    const availabilityBetweenHours = await prisma.availability.findFirst({
       where: {
         beginHour: {
           gt: data.beginHour,
@@ -27,6 +27,8 @@ export class PrismaAvailaibilityRepository implements AvailaibilityRepository {
         endHour: {
           lt: data.endHour,
         },
+        status: 'approved',
+        laboratoryId: data.laboratoryId,
       },
     })
 
@@ -35,6 +37,30 @@ export class PrismaAvailaibilityRepository implements AvailaibilityRepository {
         'Na data escolhida, já existem horários agendados entre os que você selecionou.',
       )
     }
+
+    const availabilityEqualHours = await prisma.availability.findFirst({
+      where: {
+        beginHour: {
+          equals: data.beginHour,
+        },
+        endHour: {
+          equals: data.endHour,
+        },
+        status: 'approved',
+        laboratoryId: data.laboratoryId,
+      },
+    })
+
+    if (availabilityEqualHours) {
+      throw new Error('Já existe um horário agendado nessa data')
+    }
+
+    if (Number(data.endHour) < Number(data.beginHour)) {
+      throw new Error(
+        'O horário final não pode ser menor que o horário inicial',
+      )
+    }
+
     const availaibility = await prisma.availability.create({
       data,
       include: {
