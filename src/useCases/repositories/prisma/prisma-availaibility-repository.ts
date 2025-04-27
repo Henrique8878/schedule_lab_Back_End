@@ -98,7 +98,13 @@ export class PrismaAvailaibilityRepository implements AvailaibilityRepository {
     return availability
   }
 
-  async findManyAvailability(page: number) {
+  async findManyAvailability(
+    page: number,
+    name: string | undefined | null,
+    beginDate: string | undefined | null,
+    status: string | undefined | null,
+    visibility: string | undefined | null,
+  ) {
     await prisma.user.deleteMany({
       where: {
         expires_at: {
@@ -108,9 +114,30 @@ export class PrismaAvailaibilityRepository implements AvailaibilityRepository {
       },
     })
 
+    const dayStart = beginDate ? new Date(beginDate) : undefined
+    const dayEnd = beginDate
+      ? new Date(new Date(beginDate).setHours(23, 59, 59, 999))
+      : undefined
+
     const manyAvailabilities = await prisma.availability.findMany({
       take: 10,
       skip: (page - 1) * 10,
+      where: {
+        laboratory: {
+          name: {
+            contains: name || undefined,
+          },
+        },
+        beginHour: beginDate
+          ? {
+              gte: dayStart,
+              lte: dayEnd,
+            }
+          : undefined,
+
+        status: status === 'all' ? undefined : status || undefined,
+        visibility: visibility === 'all' ? undefined : visibility || undefined,
+      },
       include: {
         laboratory: true,
       },
@@ -119,7 +146,23 @@ export class PrismaAvailaibilityRepository implements AvailaibilityRepository {
       },
     })
 
-    const totalCount = await prisma.availability.count()
+    const totalCount = await prisma.availability.count({
+      where: {
+        laboratory: {
+          name: {
+            contains: name || undefined,
+          },
+        },
+        beginHour: beginDate
+          ? {
+              gte: dayStart,
+              lte: dayEnd,
+            }
+          : undefined,
+
+        status: status === 'all' ? undefined : status || undefined,
+      },
+    })
 
     const availabilityInMonth = await prisma.availability.count({
       where: {

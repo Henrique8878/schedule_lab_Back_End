@@ -10,15 +10,15 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
     beginHour: z.string().datetime(),
     endHour: z.string().datetime(),
     userId: z.string(),
+    visibility: z.enum(['private', 'public']),
   })
 
   const laboratoryIdSchema = z.object({
     laboratoryId: z.string(),
   })
 
-  const { date, beginHour, endHour, userId } = createAvailaibilitySchema.parse(
-    request.body,
-  )
+  const { date, beginHour, endHour, userId, visibility } =
+    createAvailaibilitySchema.parse(request.body)
   const { laboratoryId } = laboratoryIdSchema.parse(request.params)
 
   try {
@@ -29,6 +29,7 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
       endHour: new Date(endHour),
       laboratoryId,
       userId,
+      visibility,
     })
     reply.status(201).send(newAvailaibility)
   } catch (e) {

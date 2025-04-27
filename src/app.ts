@@ -6,6 +6,7 @@ import { env } from './env'
 import { AvailabilityRoutes } from './http/controllers/availaibilities/routes'
 import { EmailVerificationRoutes } from './http/controllers/email_verification/routes'
 import { LaboratoriesRoutes } from './http/controllers/laboratories/routes'
+import { SignUpEventRoutes } from './http/controllers/sign_up_event/routes'
 import { UsersRoutes } from './http/controllers/users/routes'
 export const app = Fastify()
 
@@ -22,6 +23,7 @@ app.register(UsersRoutes)
 app.register(LaboratoriesRoutes)
 app.register(AvailabilityRoutes)
 app.register(EmailVerificationRoutes)
+app.register(SignUpEventRoutes)
 
 app.setErrorHandler((error, _, reply) => {
   if (error instanceof ZodError) {

@@ -47,8 +47,10 @@ model Availability{
   beginHour DateTime
   endHour DateTime
   status String @default("approved")
+  visibility String
   laboratoryId String
   userId String
+  manySignUpEvent SignUpEvent []
   user User @relation(fields: [userId],references: [id], onDelete: Cascade)
   laboratory Laboratory @relation(fields: [laboratoryId], references: [id], onDelete: Cascade)
 }
@@ -58,4 +60,14 @@ model emailVerification{
   userEmail String @unique
   token String
   expires_at DateTime
+}
+
+model SignUpEvent{
+  id String @id @default(uuid())
+  name String
+  email String
+  telephone String
+  availabilityId String
+  availability Availability @relation(fields: [availabilityId],references: [id],onDelete: Cascade)
+  @@map("signUpEvent")
 }

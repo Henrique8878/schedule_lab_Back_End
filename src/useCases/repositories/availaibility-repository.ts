@@ -10,7 +10,13 @@ export interface AvailaibilityRepository {
     laboratoryId: string,
   ): Promise<Availability | null>
 
-  findManyAvailability(page: number): Promise<{
+  findManyAvailability(
+    page: number,
+    name: string | undefined | null,
+    beginDate: string | undefined | null,
+    status: string | undefined | null,
+    visibility: string | undefined | null,
+  ): Promise<{
     availability: Availability[]
     availabilityInMonth: number
     totalCount: number

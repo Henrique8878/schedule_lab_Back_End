@@ -10,6 +10,7 @@ interface CreateAvailaibilityParams {
   endHour: Date
   laboratoryId: string
   userId: string
+  visibility: string
 }
 
 interface CreateAvailaibilityReturn {
@@ -26,6 +27,7 @@ export class CreateAvailaibilityUseCase {
     endHour,
     laboratoryId,
     userId,
+    visibility,
   }: CreateAvailaibilityParams): Promise<CreateAvailaibilityReturn> {
     const newAvailaibility = await this.availaibilityRepository.create({
       id,
@@ -35,6 +37,7 @@ export class CreateAvailaibilityUseCase {
       endHour,
       laboratoryId,
       userId,
+      visibility,
     })
 
     if (newAvailaibility === null) {
