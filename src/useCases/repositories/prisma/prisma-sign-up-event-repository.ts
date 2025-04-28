@@ -6,6 +6,26 @@ export class PrismaSignUpEventRepository implements SignUpEventRepository {
   async create(
     data: Prisma.SignUpEventUncheckedCreateInput,
   ): Promise<SignUpEvent> {
+    const findEmail = await prisma.signUpEvent.findFirst({
+      where: {
+        email: data.email,
+      },
+    })
+
+    if (findEmail) {
+      throw new Error('Email já cadastrado')
+    }
+
+    const findPhone = await prisma.signUpEvent.findFirst({
+      where: {
+        telephone: data.telephone,
+      },
+    })
+
+    if (findPhone) {
+      throw new Error('Telefone já cadastrado')
+    }
+
     const signUpEvent = await prisma.signUpEvent.create({
       data,
     })

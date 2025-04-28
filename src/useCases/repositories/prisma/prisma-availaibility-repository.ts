@@ -140,6 +140,7 @@ export class PrismaAvailaibilityRepository implements AvailaibilityRepository {
       },
       include: {
         laboratory: true,
+        manySignUpEvent: true,
       },
       orderBy: {
         created_at: 'desc',
